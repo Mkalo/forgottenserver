@@ -28,7 +28,7 @@
 #include "enums.h"
 #include "creatureevent.h"
 
-using ConditionList = std::list<Condition*>;
+using ConditionList = std::list<std::unique_ptr<Condition>>;
 using CreatureEventList = std::list<CreatureEvent*>;
 
 enum slots_t : uint8_t {

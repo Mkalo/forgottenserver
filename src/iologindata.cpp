@@ -659,9 +659,11 @@ bool IOLoginData::savePlayer(Player* player)
 
 	//serialize conditions
 	PropWriteStream propWriteStream;
-	for (Condition* condition : player->conditions) {
-		if (condition->isPersistent()) {
-			condition->serialize(propWriteStream);
+	Condition* conditionPointer;
+	for (auto& condition : player->conditions) {
+		conditionPointer = condition.get();
+		if (conditionPointer && conditionPointer->isPersistent()) {
+			conditionPointer->serialize(propWriteStream);
 			propWriteStream.write<uint8_t>(CONDITIONATTR_END);
 		}
 	}

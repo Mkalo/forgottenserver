@@ -390,9 +390,11 @@ float Player::getDefenseFactor() const
 uint16_t Player::getClientIcons() const
 {
 	uint16_t icons = 0;
-	for (Condition* condition : conditions) {
-		if (!isSuppress(condition->getType())) {
-			icons |= condition->getIcons();
+	Condition* conditionPointer;
+	for (auto& condition : conditions) {
+		conditionPointer = condition.get();
+		if (conditionPointer && !isSuppress(conditionPointer->getType())) {
+			icons |= conditionPointer->getIcons();
 		}
 	}
 
@@ -1457,9 +1459,11 @@ uint32_t Player::isMuted() const
 	}
 
 	int32_t muteTicks = 0;
-	for (Condition* condition : conditions) {
-		if (condition->getType() == CONDITION_MUTED && condition->getTicks() > muteTicks) {
-			muteTicks = condition->getTicks();
+	Condition* conditionPointer;
+	for (auto& condition : conditions) {
+		conditionPointer = condition.get();
+		if (conditionPointer && conditionPointer->getType() == CONDITION_MUTED && conditionPointer->getTicks() > muteTicks) {
+			muteTicks = conditionPointer->getTicks();
 		}
 	}
 	return static_cast<uint32_t>(muteTicks) / 1000;
@@ -2010,13 +2014,18 @@ void Player::death(Creature* lastHitCreature)
 
 		auto it = conditions.begin(), end = conditions.end();
 		while (it != end) {
-			Condition* condition = *it;
-			if (condition->isPersistent()) {
+			Condition* condition = (*it).get();
+			if (!condition) {
 				it = conditions.erase(it);
+				continue;
+			}
 
+			if (condition->isPersistent()) {
+				std::unique_ptr<Condition> deletedPtr = std::move(*it);
+				it = conditions.erase(it);
+				condition = deletedPtr.get();
 				condition->endCondition(this);
 				onEndCondition(condition->getType());
-				delete condition;
 			} else {
 				++it;
 			}
@@ -2026,13 +2035,18 @@ void Player::death(Creature* lastHitCreature)
 
 		auto it = conditions.begin(), end = conditions.end();
 		while (it != end) {
-			Condition* condition = *it;
-			if (condition->isPersistent()) {
+			Condition* condition = (*it).get();
+			if (!condition) {
 				it = conditions.erase(it);
+				continue;
+			}
 
+			if (condition->isPersistent()) {
+				std::unique_ptr<Condition> deletedPtr = std::move(*it);
+				it = conditions.erase(it);
+				condition = deletedPtr.get();
 				condition->endCondition(this);
 				onEndCondition(condition->getType());
-				delete condition;
 			} else {
 				++it;
 			}
@@ -4450,17 +4464,19 @@ size_t Player::getMaxDepotItems() const
 std::forward_list<Condition*> Player::getMuteConditions() const
 {
 	std::forward_list<Condition*> muteConditions;
-	for (Condition* condition : conditions) {
-		if (condition->getTicks() <= 0) {
+	Condition* conditionPointer;
+	for (auto& condition : conditions) {
+		conditionPointer = condition.get();
+		if (!conditionPointer || conditionPointer->getTicks() <= 0) {
 			continue;
 		}
 
-		ConditionType_t type = condition->getType();
+		ConditionType_t type = conditionPointer->getType();
 		if (type != CONDITION_MUTED && type != CONDITION_CHANNELMUTEDTICKS && type != CONDITION_YELLTICKS) {
 			continue;
 		}
 
-		muteConditions.push_front(condition);
+		muteConditions.push_front(conditionPointer);
 	}
 	return muteConditions;
 }
