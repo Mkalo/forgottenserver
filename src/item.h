@@ -1,6 +1,6 @@
 /**
  * The Forgotten Server - a free and open-source MMORPG server emulator
- * Copyright (C) 2016  Mark Samman <mark.samman@gmail.com>
+ * Copyright (C) 2017  Mark Samman <mark.samman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -337,7 +337,7 @@ class ItemAttributes
 		};
 
 	protected:
-		inline bool hasAttribute(itemAttrTypes type) const {
+		bool hasAttribute(itemAttrTypes type) const {
 			return (type & attributeBits) != 0;
 		}
 		void removeAttribute(itemAttrTypes type);
@@ -496,10 +496,10 @@ class ItemAttributes
 		}
 
 	public:
-		inline static bool isIntAttrType(itemAttrTypes type) {
+		static bool isIntAttrType(itemAttrTypes type) {
 			return (type & 0x7FFE13) != 0;
 		}
-		inline static bool isStrAttrType(itemAttrTypes type) {
+		static bool isStrAttrType(itemAttrTypes type) {
 			return (type & 0x1EC) != 0;
 		}
 		inline static bool isCustomAttrType(itemAttrTypes type) {
@@ -911,7 +911,13 @@ class Item : virtual public Thing
 			count = n;
 		}
 
-		static uint32_t countByType(const Item* i, int32_t subType);
+		static uint32_t countByType(const Item* i, int32_t subType) {
+			if (subType == -1 || subType == i->getSubType()) {
+				return i->getItemCount();
+			}
+
+			return 0;
+		}
 
 		void setDefaultSubtype();
 		uint16_t getSubType() const;
@@ -996,16 +1002,7 @@ class Item : virtual public Thing
 		//Don't add variables here, use the ItemAttribute class.
 };
 
-typedef std::list<Item*> ItemList;
-typedef std::deque<Item*> ItemDeque;
-
-inline uint32_t Item::countByType(const Item* i, int32_t subType)
-{
-	if (subType == -1 || subType == i->getSubType()) {
-		return i->getItemCount();
-	}
-
-	return 0;
-}
+using ItemList = std::list<Item*>;
+using ItemDeque = std::deque<Item*>;
 
 #endif
