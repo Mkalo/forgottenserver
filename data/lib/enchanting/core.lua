@@ -1,0 +1,7 @@
+dofile('data/lib/enchanting/config.lua')
+dofile('data/lib/enchanting/tools.lua')
+dofile('data/lib/enchanting/item.lua')
+dofile('data/lib/enchanting/player.lua')
+dofile('data/lib/enchanting/creature.lua')
+dofile('data/lib/enchanting/condition.lua')
+dofile('data/lib/enchanting/modifiers.lua')
