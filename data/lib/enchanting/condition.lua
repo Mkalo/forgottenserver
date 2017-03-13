@@ -47,11 +47,11 @@ function Condition:setAttributeFishingSkill(player, bonus)
 	self:setParamater(CONDITION_PARAM_SKILL_FISHING, calculateBonusValue(player:getSkillLevel(SKILL_FISHING), bonus))
 end
 
-function Cndition:setAttributeShieldSkill(player, bonus)
+function Condition:setAttributeShieldSkill(player, bonus)
 	self:setParamater(CONDITION_PARAM_SKILL_SHIELD, calculateBonusValue(player:getSkillLevel(SKILL_SHIELD), bonus))
 end
 
-function Cndition:setAttributePlayerSpeed(player, bonus)
+function Condition:setAttributePlayerSpeed(player, bonus)
 	-- TODO
 	self:setFormula(bonus.value / 100, 0, bonus.value / 100, 0) 
 end

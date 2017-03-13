@@ -18,7 +18,7 @@ function Item:getExtendedWeaponType()
 	local itemType = self:getType()
 	local weaponType = itemType:getWeaponType()
 	if weaponType == WEAPON_NONE then
-		for extType = WEAPON_HELMET, WEAPON_RING then
+		for extType = WEAPON_HELMET, WEAPON_RING do
 			if itemType:usesSlot(WEAPON_SLOTID[extType]) then
 				return extType
 			end
