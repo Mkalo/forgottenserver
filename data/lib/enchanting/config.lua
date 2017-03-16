@@ -198,6 +198,8 @@ TIER_SLOTCOUNT = {
 	[GODLY_TIER] = 4
 }
 
+MOVEMENT_ACTIONID = 15000
+
 TIER_BONUSES = {}
 
 --[=[
@@ -209,7 +211,7 @@ TIER_BONUSES[TIER_ID] = {
 TIER_BONUSES[COMMON_TIER] = {
 	[ATTRIBUTE_ATTACK] = {value =  1},
 	[ATTRIBUTE_DEFENSE] = {value =  1},
-	[ATTRIBUTE_ARMOR] = {value =  1},
+	[ATTRIBUTE_ARMOR] = {value = 50, type = "percentage"},
 	[ATTRIBUTE_ATTACKSPEED] = {value =  1},
 	[ATTRIBUTE_HITCHANCE] = {value =  1},
 	[ATTRIBUTE_MAXMANA] = {value =  1},

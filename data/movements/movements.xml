@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <movements>
+	<movevent event="Equip" actionid="15000" function="onEquipItem" script="enchanting/changeequip.lua" />
+	<movevent event="DeEquip" actionid="15000" function="onDeEquipItem" script="enchanting/changeequip.lua" />
 	<!-- Decaying tiles -->
 	<movevent event="StepIn" itemid="293" script="decay.lua" />
 	<movevent event="StepIn" itemid="461" script="decay.lua" />

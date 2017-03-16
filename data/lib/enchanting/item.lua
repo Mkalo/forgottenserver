@@ -5,8 +5,8 @@ function Item:getAttributeIds()
 		return returnValue
 	end
 
-	for enchantmentSlot = 1, TIER_SLOTCOUNT[tierId] do
-		local attributeId = item:getAttributeFromSlot(enchantmentSlot)
+	for slotId = 1, TIER_SLOTCOUNT[tierId] do
+		local attributeId = self:getAttributeFromSlot(slotId)
 		if attributeId then
 			returnValue[#returnValue + 1] = attributeId
 		end
@@ -32,14 +32,14 @@ function Item:getTierId()
 	return self:getCustomAttribute("tierId")
 end
 
-function Item:getAttributeFromSlot(enchantmentSlot)
-	return self:getCustomAttribute("slotId_" .. enchantmentSlot)
+function Item:getAttributeFromSlot(slotId)
+	return self:getCustomAttribute("slotId_" .. slotId)
 end
 
 function Item:setAttributeModifiers()
-	local tierId = item:getTierId()
+	local tierId = self:getTierId()
 	if tierId then
-		local attributeIds = item:getAttributeIds()
+		local attributeIds = self:getAttributeIds()
 		for i = 1, #attributeIds do
 			local attributeId = attributeIds[i]
 			if ITEM_MODIFIERS[attributeId] then
@@ -48,6 +48,33 @@ function Item:setAttributeModifiers()
 			end
 		end
 	end
+end
+
+function Item:setTierId(tierId, generateAttributes)
+	if TIER_NAMES[tierId] then
+		self:setCustomAttribute("tierId", tierId)
+		self:setActionId(MOVEMENT_ACTIONID)
+		print(self:getActionId())
+		if generateAttributes then
+			for slotId = 1, TIER_SLOTCOUNT[tierId] do
+				--
+			end
+		end
+	end
+end
+
+function Item:setAttributeInSlot(slotId, attributeId)
+	local tierId = self:getTierId()
+	if tierId and slotId <= TIER_SLOTCOUNT[tierId] and TIER_BONUSES[tierId][attributeId] then
+		local oldAttribute = self:getAttributeFromSlot(slotId)
+		if oldAttribute and ITEM_MODIFIERS[oldAttribute] then
+			ITEM_MODIFIERS[oldAttribute](self, {value = 0})
+		end
+
+		self:setCustomAttribute("slotId_" .. slotId, attributeId)
+		self:setAttributeModifiers()
+	end
+	return false
 end
 
 -- Modifier Functions

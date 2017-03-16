@@ -33,6 +33,7 @@ function Player:updateItemConditions(item, equip)
 			if equip then
 				-- onEquipItem
 				local condition = Condition(ATTRIBUTE_CONDITION_TYPES[attributeId], weaponType)
+				print(condition)
 				local bonus = TIER_BONUSES[tierId][attributeId]
 				condition:setParameter(CONDITION_PARAM_TICKS, -1)
 				CONDITION_MODIFIERS[attributeId](condition, self, bonus)
@@ -45,6 +46,14 @@ function Player:updateItemConditions(item, equip)
 	end
 end
 
+function Player:onChangeEnchantedEquipment(item, equip)
+	print("Lmao")
+	self:updateItemConditions(item, equip)
+	if equip then
+		item:setAttributeModifiers()
+	end
+	return true	
+end
 -- Modifier Functions
 
 --   Player Modifiers 
