@@ -4,6 +4,17 @@ end
 
 function Player:onLook(thing, position, distance)
 	local description = "You see " .. thing:getDescription(distance)
+	if thing:isItem() then
+		local i, j = description:find("^.-%.\n")
+		local attributeString = thing:getAttributeString()
+		description = description:sub(i, j) .. attributeString .. description:sub(j + 1)
+		local tierId = thing:getTierId()
+		if tierId and TIER_NAMES[tierId] then
+			local name = thing:hasAttribute(ITEM_ATTRIBUTE_NAME) and thing:getAttribute(ITEM_ATTRIBUTE_NAME) or thing:getType():getName()
+			local p, q = description:find(name)
+			description = description:sub(1, p - 1) .. ("[%s] "):format(TIER_NAMES[tierId]) .. description:sub(p)
+		end
+	end
 	if self:getGroup():getAccess() then
 		if thing:isItem() then
 			description = string.format("%s\nItem ID: %d", description, thing:getId())

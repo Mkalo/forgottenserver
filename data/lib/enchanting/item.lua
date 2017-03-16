@@ -54,10 +54,9 @@ function Item:setTierId(tierId, generateAttributes)
 	if TIER_NAMES[tierId] then
 		self:setCustomAttribute("tierId", tierId)
 		self:setActionId(MOVEMENT_ACTIONID)
-		print(self:getActionId())
 		if generateAttributes then
 			for slotId = 1, TIER_SLOTCOUNT[tierId] do
-				--
+				-- TODO
 			end
 		end
 	end
@@ -75,6 +74,27 @@ function Item:setAttributeInSlot(slotId, attributeId)
 		self:setAttributeModifiers()
 	end
 	return false
+end
+
+function Item:getAttributeString()
+	local attributeIds = self:getAttributeIds()
+	local ret = ""
+	if #attributeIds == 0 then
+		return ret
+	end
+
+	local buffer = {}
+	local tierId = self:getTierId()
+
+	for i = 1, #attributeIds do
+		local attributeId = attributeIds[i]
+		if ATTRIBUTE_NAMES[attributeId] then
+			local bonus = TIER_BONUSES[tierId][attributeId]
+			local percentage = bonus.type == "percentage" or isInArray(PERCENTAGE_ATTRIBUTES, attributeId)
+			buffer[#buffer + 1] = ("%s: %d%s"):format(ATTRIBUTE_NAMES[attributeId], bonus.value, (percentage and "%" or ""))
+		end
+	end
+	return table.concat(buffer, ", ") .. "\n"
 end
 
 -- Modifier Functions
