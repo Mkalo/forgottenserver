@@ -31,7 +31,7 @@ end
 -- Modifier Functions
 
 function Creature:applyAttributeCritical(bonus, player, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
-	local rand = math.random(1, 100000)
+	local rand = math.random(1, 100)
 	if rand > bonus.value then
 		return primaryDamage, primaryType, secondaryDamage, secondaryType
 	end

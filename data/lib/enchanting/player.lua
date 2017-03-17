@@ -26,22 +26,27 @@ function Player:updateItemConditions(item, equip)
 	end
 
 	local attributeIds = item:getAttributeIds()
+	local conditions = {}
 
 	for i = 1, #attributeIds do
 		local attributeId = attributeIds[i]
 		if CONDITION_MODIFIERS[attributeId] then
 			if equip then
 				-- onEquipItem
-				local condition = Condition(ATTRIBUTE_CONDITION_TYPES[attributeId], weaponType)
+				local condition = conditions[ATTRIBUTE_CONDITION_TYPES[attributeId]] or Condition(ATTRIBUTE_CONDITION_TYPES[attributeId], weaponType)
+				conditions[ATTRIBUTE_CONDITION_TYPES[attributeId]] = condition
 				local bonus = TIER_BONUSES[tierId][attributeId]
-				condition:setParameter(CONDITION_PARAM_TICKS, -1)
 				CONDITION_MODIFIERS[attributeId](condition, self, bonus)
-				self:addCondition(condition)
 			else
 				-- onDeEquipItem
 				self:removeCondition(ATTRIBUTE_CONDITION_TYPES[attributeId], weaponType)
 			end
 		end
+	end
+
+	for conditionType, condition in pairs(conditions) do
+		condition:setParameter(CONDITION_PARAM_TICKS, -1)
+		self:addCondition(condition)
 	end
 end
 
@@ -72,14 +77,16 @@ end
 
 --   Player Stats Modifiers
 function Player:applyAttributeDodge(bonus, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
-	local rand = math.random(1, 100000)
+	local rand = math.random(1, 100)
 	if self == attacker or rand > bonus.value then
 		return primaryDamage, primaryType, secondaryDamage, secondaryType
 	end
 
+	print("Dodge", primaryDamage)
 	if primaryType ~= COMBAT_HEALING and primaryType ~= COMBAT_MANADRAIN then
 		primaryDamage = primaryDamage * 0.5
 	end
+	print("After", primaryDamage)
 	if secondaryType ~= COMBAT_HEALING and secondaryType ~= COMBAT_MANADRAIN then
 		secondaryDamage = secondaryDamage * 0.5
 	end
