@@ -1,15 +1,12 @@
 function onSay(player, words, param)
-	print(table.concat(ItemType(2461):getVocationList(), ","))
-
 	local t = param:split(",")
-	if #t < 3 then
+	if #t < 2 then
 		return false
 	end
 
 	local item = player:getItemById(tonumber(t[1]), true)
 
 	if item then
-		item:setTierId(tonumber(t[2]))
-		item:setAttributeInSlot(1, tonumber(t[3]))
+		item:setTierId(tonumber(t[2]), true)
 	end
 end

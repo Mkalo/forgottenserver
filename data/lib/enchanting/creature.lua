@@ -23,6 +23,11 @@ function Creature:applyCreatureStatsModifiers(player, primaryDamage, primaryType
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
 end
 
+function Creature:registerCreatureAttributeEvents()
+	self:registerEvent("AttributeCreatureHealthChange")
+	self:registerEvent("AttributeCreatureManaChange")
+end
+
 -- Modifier Functions
 
 function Creature:applyAttributeCritical(bonus, player, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)

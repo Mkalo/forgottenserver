@@ -9,4 +9,8 @@
 	<event type="death" name="DropLoot" script="droploot.lua" />
 	<event type="extendedopcode" name="ExtendedOpcode" script="extendedopcode.lua" />
 	<event type="modalwindow" name="ModalWindowHelper" script="modalwindowhelper.lua" />
+	<event type="healthchange" name="AttributePlayerHealthChange" script="enchanting/player.lua" />
+	<event type="manachange" name="AttributePlayerManaChange" script="enchanting/player.lua" />
+	<event type="healthchange" name="AttributeCreatureHealthChange" script="enchanting/creature.lua" />
+	<event type="manachange" name="AttributeCreatureManaChange" script="enchanting/creature.lua" />
 </creaturescripts>

@@ -55,10 +55,16 @@ function Item:setTierId(tierId, generateAttributes)
 		self:setCustomAttribute("tierId", tierId)
 		self:setActionId(MOVEMENT_ACTIONID)
 		if generateAttributes then
-			for slotId = 1, TIER_SLOTCOUNT[tierId] do
-				-- TODO
-			end
+			self:setRandomAttributes(TIER_SLOTCOUNT[tierId])
 		end
+	end
+end
+
+function Item:setRandomAttributes(count)
+	local possibleAttributes = self:getPossibleAttributes()
+	table.shuffle(possibleAttributes, 5)
+	for slotId = 1, math.min(count, #possibleAttributes) do
+		self:setAttributeInSlot(slotId, possibleAttributes[slotId])
 	end
 end
 
@@ -97,6 +103,30 @@ function Item:getAttributeString()
 	return table.concat(buffer, ", ") .. "\n"
 end
 
+function Item:getVocationIds()
+	local tmp = {}
+	local vocations = self:getType():getVocationList()
+	for i = 1, #vocations do
+		if vocations[i] == 1 or vocations[i] == 5 then
+			tmp[ITEM_VOC_SORCERER] = true
+		elseif vocations[i] == 2 or vocations[i] == 6 then
+			tmp[ITEM_VOC_DRUID] = true
+		elseif vocations[i] == 3 or vocations[i] == 7 then
+			tmp[ITEM_VOC_PALADIN] = true
+		elseif vocations[i] == 4 or vocations[i] == 8 then
+			tmp[ITEM_VOC_KNIGHT] = true
+		end
+	end
+
+	local ret = {}
+	for vocation, bool in pairs(tmp) do
+		if bool then
+			ret[#ret + 1] = vocation
+		end
+	end
+	return ret
+end
+
 function Item:getPossibleAttributes()
 	local ret = {}
 	local weaponType = self:getExtendedWeaponType()
@@ -104,9 +134,24 @@ function Item:getPossibleAttributes()
 		return ret
 	end
 
+	local vocationTable = self:getVocationIds()
+
 	local attributes = WEAPON_ATTRIBUTES[weaponType]
 	if type(attributes[ITEM_VOC_ALL]) == "table" then
+		if #vocationTable == 0 then
+			ret = table.copy(WEAPON_ATTRIBUTES[weaponType][ITEM_VOC_ALL])
+		else
+			for i = 1, #vocationTable do
+				if WEAPON_ATTRIBUTES[weaponType][vocationTable[i]] then
+					ret = table.merge(ret, WEAPON_ATTRIBUTES[weaponType][vocationTable[i]])
+				end
+			end
+		end
+	else
+		ret = table.copy(WEAPON_ATTRIBUTES[weaponType])
 	end
+
+	return ret
 end
 
 -- Modifier Functions

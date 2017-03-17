@@ -52,6 +52,13 @@ function Player:onChangeEnchantedEquipment(item, equip)
 	end
 	return true	
 end
+
+function Player:registerPlayerAttributeEvents()
+	self:registerCreatureAttributeEvents()
+	self:registerEvent("AttributePlayerHealthChange")
+	self:registerEvent("AttributePlayerManaChange")
+end
+
 -- Modifier Functions
 
 --   Player Modifiers 
