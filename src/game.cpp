@@ -529,6 +529,11 @@ bool Game::internalPlaceCreature(Creature* creature, const Position& pos, bool e
 	creature->incrementReferenceCounter();
 	creature->setID();
 	creature->addList();
+	
+	if (Monster* monster = creature->getMonster()) {
+		g_events->eventMonsterOnSpawn(monster, pos);
+	}
+
 	return true;
 }
 
