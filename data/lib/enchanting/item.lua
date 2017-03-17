@@ -97,6 +97,18 @@ function Item:getAttributeString()
 	return table.concat(buffer, ", ") .. "\n"
 end
 
+function Item:getPossibleAttributes()
+	local ret = {}
+	local weaponType = self:getExtendedWeaponType()
+	if not WEAPON_ATTRIBUTES[weaponType] then
+		return ret
+	end
+
+	local attributes = WEAPON_ATTRIBUTES[weaponType]
+	if type(attributes[ITEM_VOC_ALL]) == "table" then
+	end
+end
+
 -- Modifier Functions
 function Item:setAttributeAttack(bonus)
 	local attack = self:getType():getAttack()

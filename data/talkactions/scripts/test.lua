@@ -1,4 +1,6 @@
 function onSay(player, words, param)
+	print(table.concat(ItemType(2461):getVocationList(), ","))
+
 	local t = param:split(",")
 	if #t < 3 then
 		return false

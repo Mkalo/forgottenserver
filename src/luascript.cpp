@@ -2479,6 +2479,8 @@ void LuaScriptInterface::registerFunctions()
 
 	registerMethod("ItemType", "hasSubType", LuaScriptInterface::luaItemTypeHasSubType);
 
+	registerMethod("ItemType", "getVocationList", LuaScriptInterface::luaItemTypeGetVocationList);
+
 	// Combat
 	registerClass("Combat", "", LuaScriptInterface::luaCombatCreate);
 	registerMetaMethod("Combat", "__eq", LuaScriptInterface::luaUserdataCompare);
@@ -11172,6 +11174,26 @@ int LuaScriptInterface::luaItemTypeHasSubType(lua_State* L)
 	const ItemType* itemType = getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		pushBoolean(L, itemType->hasSubType());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int LuaScriptInterface::luaItemTypeGetVocationList(lua_State* L)
+{
+	// itemType:getVocationList()
+	const ItemType* itemType = getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_newtable(L);
+
+		int index = 0;
+		for (auto it : itemType->vocEquipMap) {
+			if (it.second) {
+				lua_pushnumber(L, it.first);
+				lua_rawseti(L, -2, ++index);
+			}
+		}
 	} else {
 		lua_pushnil(L);
 	}

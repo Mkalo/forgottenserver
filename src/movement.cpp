@@ -125,6 +125,7 @@ bool MoveEvents::registerEvent(Event* event, const pugi::xml_node& node)
 			it.minReqLevel = moveEvent->getReqLevel();
 			it.minReqMagicLevel = moveEvent->getReqMagLv();
 			it.vocationString = moveEvent->getVocationString();
+			it.vocEquipMap = moveEvent->getVocEquipMap();
 		}
 	} else if ((attr = node.attribute("fromid"))) {
 		uint32_t id = pugi::cast<uint32_t>(attr.value());

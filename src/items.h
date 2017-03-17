@@ -184,6 +184,7 @@ class ItemType
 		std::string description;
 		std::string runeSpellName;
 		std::string vocationString;
+		std::map<uint16_t, bool> vocEquipMap;
 
 		std::unique_ptr<Abilities> abilities;
 		std::unique_ptr<ConditionDamage> conditionDamage;

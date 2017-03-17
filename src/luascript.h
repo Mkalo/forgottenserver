@@ -1146,6 +1146,8 @@ class LuaScriptInterface
 
 		static int luaItemTypeHasSubType(lua_State* L);
 
+		static int luaItemTypeGetVocationList(lua_State* L);
+
 		// Combat
 		static int luaCombatCreate(lua_State* L);
 
