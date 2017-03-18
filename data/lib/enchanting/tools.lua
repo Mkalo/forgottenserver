@@ -10,6 +10,9 @@ end
 
 function doReflectDamage(player, attacker, type, damage)
 	if player and attacker then
+		if damage > 0 then
+			damage = -damage
+		end
 		doTargetCombatHealth(player, attacker, type, damage, damage, CONST_ME_NONE, ORIGIN_NONE)
 	end
 end
